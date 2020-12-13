@@ -27,13 +27,14 @@ namespace Mindbox.UnitTests
             //Arrange
             Mock<IGeometryService> serviceMock = new Mock<IGeometryService>();
             serviceMock.Setup(x => x.SaveFigureAsync(It.IsAny<FigureBase>(), It.IsAny<CancellationToken>())).ReturnsAsync(1);
+            JsonElement element = JsonDocument.Parse("{\"figureType\":\"circle\", \"data\":{\"Radius\":1}}").RootElement;
 
             //Act
             GeometryController controller = GetGeometryController(serviceMock.Object);
             TestModel model = new TestModel();
 
             //Assert
-            var result = await controller.CreateFigure(new JsonElement(),  CancellationToken.None);
+            var result = await controller.CreateFigure(element,  CancellationToken.None);
             var resultAsType = result as ObjectResult;
             Assert.AreEqual(StatusCodes.Status201Created, resultAsType.StatusCode);
             Assert.IsNotNull(resultAsType);
@@ -46,12 +47,12 @@ namespace Mindbox.UnitTests
         {
             //Arrange
             Mock<IGeometryService> serviceMock = new Mock<IGeometryService>();
-
+            JsonElement element = JsonDocument.Parse("{}").RootElement;
             //Act
             GeometryController controller = GetGeometryController(serviceMock.Object);
 
             //Assert
-            var result = await controller.CreateFigure(new JsonElement(), CancellationToken.None);
+            var result = await controller.CreateFigure(element, CancellationToken.None);
             var resultAsType = result as BadRequestObjectResult;
             var valueAsType = resultAsType?.Value as ProblemDetails;
             Assert.NotNull(valueAsType);
@@ -64,12 +65,14 @@ namespace Mindbox.UnitTests
             Mock<IGeometryService> serviceMock = new Mock<IGeometryService>();
             serviceMock.Setup(x => x.SaveFigureAsync(It.IsAny<FigureBase>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new BusinessValidationException("ошибка", "ошибка"));
+            JsonElement element = JsonDocument.Parse("{\"Test\":123}").RootElement;
+
 
             //Act
             GeometryController controller = GetGeometryController(serviceMock.Object);
 
             //Assert
-            var result = await controller.CreateFigure(new JsonElement(), CancellationToken.None);
+            var result = await controller.CreateFigure(element, CancellationToken.None);
             var resultAsType = result as BadRequestObjectResult;
             var valueAsType = resultAsType?.Value as ProblemDetails;
             Assert.NotNull(valueAsType);
@@ -82,12 +85,13 @@ namespace Mindbox.UnitTests
             Mock<IGeometryService> serviceMock = new Mock<IGeometryService>();
             serviceMock.Setup(x => x.SaveFigureAsync(It.IsAny<FigureBase>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new NotImplementedException());
+            JsonElement element = JsonDocument.Parse("{\"figureType\":\"circle\", \"data\":{\"Radius\":1}}").RootElement;
 
             //Act
             GeometryController controller = GetGeometryController(serviceMock.Object);
 
             //Assert
-            var result = await controller.CreateFigure(new JsonElement(), CancellationToken.None);
+            var result = await controller.CreateFigure(element, CancellationToken.None);
             var resultAsType = result as ObjectResult;
             Assert.NotNull(resultAsType);
             Assert.AreEqual(StatusCodes.Status500InternalServerError, resultAsType.StatusCode);
