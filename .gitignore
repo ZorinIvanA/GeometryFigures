@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs
+/Mindbox.Api/.vs
+/Mindbox.Api/Mindbox.Api/bin/Debug/netcoreapp3.1/runtimes
+/Mindbox.Api/Mindbox.Api/obj
+/Mindbox.Api/Mindbox.UnitTests/bin/Debug/netcoreapp3.1
+/Mindbox.Api/Mindbox.UnitTests/obj
+/Mindbox.Api/Mindbox.Api/bin/Debug/netcoreapp3.1
